@@ -12,6 +12,18 @@ typedef struct {
 } InputBuffer;
 
 
+typedef enum {
+    META_COMMAND_SUCCESS,
+    META_COMMAND_UNRECOGNIZED_COMMAND
+} MetaCommandResult;
+
+
+typedef enum {
+    PREPARE_SUCCESS,
+    PREPARE_UNCRECOGNIZED_STATEMENT
+} PrepareResult;
+
+
 // Dynamically allocates memory for a new InputBuffer struct and initializes its fields to default values
 InputBuffer* new_input_buffer() {
   InputBuffer* input_buffer = (InputBuffer*)malloc(sizeof(InputBuffer));
