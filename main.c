@@ -58,6 +58,18 @@ PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement)
 }
 
 
+void execute_statement(Statement* statement) {
+    switch (statement->type) {
+        case (STATEMENT_INSERT):
+            puts("This is where we would do an insert.");
+            break;
+        case (STATEMENT_SELECT):
+            puts("This is where we would do a select.");
+            break;
+    }
+}
+
+
 // Dynamically allocates memory for a new InputBuffer struct and initializes its fields to default values
 InputBuffer* new_input_buffer() {
   InputBuffer* input_buffer = (InputBuffer*)malloc(sizeof(InputBuffer));
