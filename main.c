@@ -24,6 +24,15 @@ typedef enum {
 } PrepareResult;
 
 
+MetaCommandResult do_meta_command(InputBuffer* input_buffer) {
+    if (strcmp(input_buffer->buffer, ".exit") == 0) {
+        exit(EXIT_SUCCESS);
+    } else {
+        return META_COMMAND_UNRECOGNIZED_COMMAND;
+    }
+}
+
+
 // Dynamically allocates memory for a new InputBuffer struct and initializes its fields to default values
 InputBuffer* new_input_buffer() {
   InputBuffer* input_buffer = (InputBuffer*)malloc(sizeof(InputBuffer));
