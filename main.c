@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
@@ -98,18 +99,6 @@ PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement)
 }
 
 
-void execute_statement(Statement* statement) {
-    switch (statement->type) {
-        case (STATEMENT_INSERT):
-            puts("This is where we would do an insert.");
-            break;
-        case (STATEMENT_SELECT):
-            puts("This is where we would do a select.");
-            break;
-    }
-}
-
-
 // serializes a Row object by copying its data into a destination buffer
 void serialize_row(Row* source, void* destination) {
     memcpy(destination + ID_OFFSET, &(source->id), ID_SIZE);
@@ -119,7 +108,7 @@ void serialize_row(Row* source, void* destination) {
 
 
 // deserializes data from a source buffer into a Row object
-void deserialization_row(void* source, Row* destination) {
+void deserialize_row(void* source, Row* destination) {
    memcpy(&(destination->id), source + ID_OFFSET, ID_SIZE); 
    memcpy(&(destination->username), source + USERNAME_OFFSET, USERNAME_SIZE); 
    memcpy(&(destination->email), source + EMAIL_OFFSET, EMAIL_SIZE); 
@@ -137,6 +126,31 @@ void* row_slot(Table* table, uint32_t row_num) {
     uint32_t byte_offset = row_offset * ROW_SIZE;
     
     return page + byte_offset;
+}
+
+
+ExecuteResult execute_insert(Statement* statement, Table* table) {
+    if (table->num_rows >= TABLE_MAX_ROWS) {
+        return EXECUTE_TALBE_FULL;
+    }
+
+    Row* row_to_insert = &(statement->row_to_insert);
+
+    serialize_row(row_to_insert, row_slot(table, table->num_rows));
+    table->num_rows += 1;
+
+    return EXECUTE_SUCCESS;
+}
+
+
+ExecuteResult execute_select(Statement statement, Table* table) {
+    Row row;
+    for (uint32_t i = 0; i < table->num_rows; i++) {
+        deserialize_row(row_slot(table, i), &row);
+        print_row(&row);
+    }
+
+    return EXECUTE_SUCCESS;
 }
 
 
