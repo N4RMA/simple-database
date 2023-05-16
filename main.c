@@ -99,6 +99,18 @@ PrepareResult prepare_statement(InputBuffer* input_buffer, Statement* statement)
 }
 
 
+// initialize table
+Table* new_table() {
+    Table* table = (Table*)malloc(sizeof(Table));
+    table->num_rows = 0;
+    for (uint32_t i = 0; i < TABLE_MAX_PAGES; i++) {
+        table->pages[i] = NULL;
+    }
+
+    return table;
+}
+
+
 // serializes a Row object by copying its data into a destination buffer
 void serialize_row(Row* source, void* destination) {
     memcpy(destination + ID_OFFSET, &(source->id), ID_SIZE);
@@ -160,8 +172,6 @@ ExecuteResult execute_statement(Statement* statement, Table* table) {
             return execute_insert(statement, table);
         case (STATEMENT_SELECT):
             return execute_select(statement, table);
-
-    
     }
 }
 
