@@ -154,6 +154,18 @@ ExecuteResult execute_select(Statement statement, Table* table) {
 }
 
 
+ExecuteResult execute_statement(Statement* statement, Table* table) {
+    switch (statement->type) {
+        case (STATEMENT_INSERT):
+            return execute_insert(statement, table);
+        case (STATEMENT_SELECT):
+            return execute_select(statement, table);
+
+    
+    }
+}
+
+
 // Dynamically allocates memory for a new InputBuffer struct and initializes its fields to default values
 InputBuffer* new_input_buffer() {
   InputBuffer* input_buffer = (InputBuffer*)malloc(sizeof(InputBuffer));
