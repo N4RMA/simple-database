@@ -111,6 +111,17 @@ Table* new_table() {
 }
 
 
+// free table
+void free_table(Table* table) {
+    for (int i = 0; table->pages[i]; i++) {
+        free(table->pages[i]);
+    }
+
+    free(table);
+
+}
+
+
 // serializes a Row object by copying its data into a destination buffer
 void serialize_row(Row* source, void* destination) {
     memcpy(destination + ID_OFFSET, &(source->id), ID_SIZE);
